@@ -1,0 +1,83 @@
+server:
+  port: 9000
+
+spring:
+  servlet: # 파일 용량 제한 설정
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  application:
+    name: instagram_diana
+
+  datasource:
+    url: jdbc:mysql://instagram-server13.cums3cepciqy.ap-northeast-2.rds.amazonaws.com/instagram_server13?autoReconnect=true # 변경해주세요
+    username: admin # 변경해주세요
+    password: fkfkfk123 # 변경해주세요
+    driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8버전
+    # driver-class-name: com.mysql.jdbc.Driver # mysql 5버전
+  sql:
+    init:
+      platform: mysql
+
+  jpa:
+    hibernate:
+      ddl-auto: update #create update none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+
+
+#server:
+#  port: 9000
+#  servlet:
+#    context-path: /
+#    encoding:
+#      charset: UTF-8
+#      enabled: true
+#      force: true
+#
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/security?serverTimezone=Asia/Seoul
+#    username: kos
+#    password: kos1234
+#
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: update #create update none
+#      naming:
+#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#    show-sql: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 658211206947-ephbghihhrh662n8ks32ijhlnnlk91dq.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+          facebook:
+            client-id: 2058319234361361 #2058319234361361 server13 production용 ID 511562584368297
+            client-secret: 9eed5bfa7ac4425a0c141c4bf7f66273
+            scope:
+              - public_profile
+              - email
+
+
+cloud:
+  aws:
+    credentials:
+      access-key: AKIAT6FC5RNRKA7FOQMD
+      secret-key: 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
+    s3: #버킷이름
+      bucket: instagram-server13
+    region: #S3 지역
+      static: ap-northeast-2
+    stack:
+      auto: false

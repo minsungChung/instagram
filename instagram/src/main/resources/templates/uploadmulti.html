@@ -1,0 +1,22 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>멀티파일 업로드 테스트</title>
+</head>
+<body>
+<h1 align="center">파일 업로드 하기</h1>
+
+<h3>multi file 업로드</h3>
+<form action="/app/users/posts" method="post"  enctype="multipart/form-data">
+  파일 : <input type="file" name="multiFile" multiple> <br> <!--multiFile-->
+  파일 설명 : <input type="title" name="content"><br> <!--fileContent-->
+  <input type="submit" value="제출">
+  <input type="hidden" name="userId" value=5> <!--업로드할 피드페이지주인 히든값-->
+</form>
+
+<form id="userProfileImageForm">
+  <h3> 프로필 이미지 업로드 테스트</h3>
+  <input type="file" name="profileImageFile"/>
+</form>
+</body>
+</html>
