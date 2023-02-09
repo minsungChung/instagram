@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetStoriesRes {
+    private Long userId;
     private String profileUrl;
     private String userName;
 }

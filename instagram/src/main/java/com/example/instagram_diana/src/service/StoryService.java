@@ -161,7 +161,7 @@ public class StoryService {
                     User user = (User)this.userRepository.findById(i.getToUser().getId()).orElseThrow(() -> {
                         return new IllegalArgumentException("user doesn't exist");
                     });
-                    GetStoriesRes gsr = new GetStoriesRes(user.getProfileUrl(), user.getUsername());
+                    GetStoriesRes gsr = new GetStoriesRes(user.getId(), user.getProfileUrl(), user.getUsername());
                     return gsr;
                 } else {
                     return null;
