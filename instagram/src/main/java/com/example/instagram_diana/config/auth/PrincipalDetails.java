@@ -10,7 +10,7 @@ package com.example.instagram_diana.config.auth;
 
 // Security Session영역 => Authentication 객체 => UserDetails 타입객체 (implements UserDetails)
 
-import com.example.instagram_diana.src.model.User;
+import com.example.instagram_diana.src.member.model.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

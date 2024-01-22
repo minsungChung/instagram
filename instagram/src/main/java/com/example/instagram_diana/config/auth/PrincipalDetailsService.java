@@ -1,8 +1,8 @@
 package com.example.instagram_diana.config.auth;
 
 
-import com.example.instagram_diana.src.model.User;
-import com.example.instagram_diana.src.user.UserRepository;
+import com.example.instagram_diana.src.member.model.User;
+import com.example.instagram_diana.src.member.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
