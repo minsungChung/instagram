@@ -2,8 +2,8 @@ package com.example.instagram_diana.config.oauth;
 
 import com.example.instagram_diana.config.auth.PrincipalDetails;
 import com.example.instagram_diana.config.secret.Secret;
-import com.example.instagram_diana.src.model.User;
-import com.example.instagram_diana.src.user.UserRepository;
+import com.example.instagram_diana.src.member.model.User;
+import com.example.instagram_diana.src.member.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;

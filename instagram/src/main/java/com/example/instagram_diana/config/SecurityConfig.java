@@ -2,20 +2,17 @@ package com.example.instagram_diana.config;
 
 import com.example.instagram_diana.config.oauth.OAuth2SuccessHandler;
 import com.example.instagram_diana.config.oauth.PrincipalOauth2UserService;
-import com.example.instagram_diana.src.user.UserRepository;
+import com.example.instagram_diana.src.member.repository.UserRepository;
 import com.example.instagram_diana.src.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.filter.CorsFilter;
 
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true) // Secure,preAuthorize annotation 활성화
 @Configuration
