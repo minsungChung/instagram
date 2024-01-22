@@ -16,8 +16,6 @@ public class FollowService {
     private final FollowDao followDao; // em구현체; repo
 
 
-
-
     @Transactional(readOnly = true)
     public List<FollowUserDto> followingList(long loginUserId, long pageUserId){
         return followDao.followingList(loginUserId,pageUserId);

@@ -1,33 +1,24 @@
 package com.example.instagram_diana.src.story.controller;
 
-import com.example.instagram_diana.config.BaseException;
-import com.example.instagram_diana.config.BaseResponse;
+import com.example.instagram_diana.src.common.exception.BaseException;
+import com.example.instagram_diana.src.common.response.BaseResponse;
 import com.example.instagram_diana.src.story.dto.*;
 import com.example.instagram_diana.src.story.service.StoryService;
 import com.example.instagram_diana.src.utils.JwtService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping({"/app"})
 public class StoryController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
     private final StoryService storyService;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Autowired
     private final JwtService jwtService;
-
-    public StoryController(StoryService storyService, JwtService jwtService) {
-        this.storyService = storyService;
-        this.jwtService = jwtService;
-    }
 
     @PostMapping({"/stories"})
     public BaseResponse<PostStoryRes> uploadStory(@RequestBody PostStoryReq postStoryReq) throws BaseException {

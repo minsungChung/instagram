@@ -1,7 +1,7 @@
 package com.example.instagram_diana.src.story.repository;
 
+import com.example.instagram_diana.src.member.model.Member;
 import com.example.instagram_diana.src.story.model.Story;
-import com.example.instagram_diana.src.member.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,9 +16,9 @@ public interface StoryRepository extends JpaRepository<Story, Long> {
     @Query("UPDATE Story s SET s.status = :status where s.id = :id")
     int updateStatus(@Param("status") String status, @Param("id") Long id);
 
-    Long countByUser(User user);
+    Long countByUser(Member user);
 
-    List<Story> findByUser(User user);
+    List<Story> findByUser(Member user);
 
 }
 

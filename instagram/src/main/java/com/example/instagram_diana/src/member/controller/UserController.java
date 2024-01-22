@@ -1,17 +1,17 @@
 package com.example.instagram_diana.src.member.controller;
 
 
-import com.example.instagram_diana.config.BaseException;
-import com.example.instagram_diana.config.BaseResponse;
+import com.example.instagram_diana.src.common.exception.BaseException;
+import com.example.instagram_diana.src.common.response.BaseResponse;
 import com.example.instagram_diana.config.auth.PrincipalDetails;
 import com.example.instagram_diana.src.member.dto.*;
 import com.example.instagram_diana.src.handler.CustomValidationException;
 import com.example.instagram_diana.src.member.service.FollowService;
 import com.example.instagram_diana.src.member.service.UserService;
 import com.example.instagram_diana.src.utils.JwtService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -25,27 +25,16 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.example.instagram_diana.config.BaseResponseStatus.*;
+import static com.example.instagram_diana.src.common.response.BaseResponseStatus.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/app/users")
 public class UserController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
     private final UserService userService;
     private final FollowService followService;
-
-    @Autowired
     private final JwtService jwtService;
-
-
-
-
-    public UserController(UserService userService, FollowService followService, JwtService jwtService){
-        this.userService = userService;
-        this.followService = followService;
-        this.jwtService = jwtService;
-    }
 
 
 

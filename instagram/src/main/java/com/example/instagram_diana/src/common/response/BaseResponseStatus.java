@@ -1,8 +1,7 @@
-package com.example.instagram_diana.config;
+package com.example.instagram_diana.src.common.response;
 
 import lombok.Getter;
 
-import lombok.Getter;
 
 /**
  * 에러 코드 관리

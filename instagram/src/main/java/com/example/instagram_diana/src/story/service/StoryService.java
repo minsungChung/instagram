@@ -1,25 +1,25 @@
 package com.example.instagram_diana.src.story.service;
 
-import com.example.instagram_diana.config.BaseException;
-import com.example.instagram_diana.config.BaseResponseStatus;
+import com.example.instagram_diana.src.common.exception.BaseException;
+import com.example.instagram_diana.src.common.response.BaseResponseStatus;
 import com.example.instagram_diana.src.comment.repository.PostCommentRepository;
 import com.example.instagram_diana.src.member.model.Follow;
-import com.example.instagram_diana.src.member.model.User;
+import com.example.instagram_diana.src.member.model.Member;
 import com.example.instagram_diana.src.member.repository.CommentLikeRepository;
 import com.example.instagram_diana.src.member.repository.FollowRepository;
 import com.example.instagram_diana.src.post.repository.PostRepository;
 import com.example.instagram_diana.src.story.dto.*;
 import com.example.instagram_diana.src.story.model.Story;
 import com.example.instagram_diana.src.story.model.StoryCheck;
-import com.example.instagram_diana.src.story.model.StroyMedia;
+import com.example.instagram_diana.src.story.model.StoryMedia;
 import com.example.instagram_diana.src.story.repository.StoryCheckRepository;
 import com.example.instagram_diana.src.story.repository.StoryMediaRepository;
 import com.example.instagram_diana.src.story.repository.StoryRepository;
 import com.example.instagram_diana.src.member.repository.UserRepository;
 import com.example.instagram_diana.src.utils.JwtService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
+@RequiredArgsConstructor
 public class StoryService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final JwtService jwtService;
@@ -42,30 +43,16 @@ public class StoryService {
     private final CommentLikeRepository commentLikeRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    public StoryService(JwtService jwtService, UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, PostRepository postRepository, StoryRepository storyRepository, StoryMediaRepository storyMediaRepository, FollowRepository followRepository, StoryCheckRepository storyCheckRepository, PostCommentRepository postCommentRepository, CommentLikeRepository commentLikeRepository) {
-        this.jwtService = jwtService;
-        this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.postRepository = postRepository;
-        this.storyRepository = storyRepository;
-        this.storyMediaRepository = storyMediaRepository;
-        this.followRepository = followRepository;
-        this.storyCheckRepository = storyCheckRepository;
-        this.postCommentRepository = postCommentRepository;
-        this.commentLikeRepository = commentLikeRepository;
-    }
-
     @Transactional
     public PostStoryRes uploadStory(Long userId, PostStoryReq postStoryReq) throws BaseException {
         try {
-            Story story = Story.builder().user((User)this.userRepository.findById(userId).orElseThrow(() -> {
+            Story story = Story.builder().user((Member) this.userRepository.findById(userId).orElseThrow(() -> {
                 return new IllegalArgumentException("user doesn't exist");
             })).contentType(postStoryReq.getContentType()).mediaUrl(postStoryReq.getMediaUrl()).postId(postStoryReq.getPostId()).build();
             Story resStory = (Story)this.storyRepository.save(story);
             Long storyId = resStory.getId();
             if (postStoryReq.getPostId() == null) {
-                StroyMedia storyMedia = StroyMedia.builder().story((Story)this.storyRepository.findById(storyId).orElseThrow(() -> {
+                StoryMedia storyMedia = StoryMedia.builder().story((Story)this.storyRepository.findById(storyId).orElseThrow(() -> {
                     return new IllegalArgumentException("story doesn't exist");
                 })).mediaType(postStoryReq.getContentType()).sourceUrl(postStoryReq.getMediaUrl()).build();
                 this.storyMediaRepository.save(storyMedia);
@@ -103,11 +90,11 @@ public class StoryService {
             } else {
                 StoryCheck storyCheck = StoryCheck.builder().story((Story)this.storyRepository.findById(storyId).orElseThrow(() -> {
                     return new IllegalArgumentException("story doesn't exist");
-                })).user((User)this.userRepository.findById(me).orElseThrow(() -> {
+                })).user((Member) this.userRepository.findById(me).orElseThrow(() -> {
                     return new IllegalArgumentException("user doesn't exist");
                 })).build();
                 this.storyCheckRepository.save(storyCheck);
-                return new GetStoryRes(story.getUser().getProfileUrl(), story.getUser().getUsername(), story.getMediaUrl(), story.getPostId(), story.getUpdatedAt());
+                return new GetStoryRes(story.getUser().getProfileUrl(), story.getUser().getUsername(), story.getMediaUrl(), story.getPostId(), story.getUpdateDate());
             }
         } catch (Exception var5) {
             this.logger.error("App - WatchStory Service Error", var5);
@@ -167,8 +154,8 @@ public class StoryService {
             Stream<Follow> stream = follow.stream();
             List<GetStoriesRes> getStoriesRes = (List)stream.map((i) -> {
                 System.out.println(i);
-                if (this.storyRepository.countByUser((User)this.userRepository.findById(i.getToUser().getId()).get()) != 0L) {
-                    User user = (User)this.userRepository.findById(i.getToUser().getId()).orElseThrow(() -> {
+                if (this.storyRepository.countByUser((Member)this.userRepository.findById(i.getToUser().getId()).get()) != 0L) {
+                    Member user = (Member) this.userRepository.findById(i.getToUser().getId()).orElseThrow(() -> {
                         return new IllegalArgumentException("user doesn't exist");
                     });
                     GetStoriesRes gsr = new GetStoriesRes(user.getId(), user.getProfileUrl(), user.getUsername());
@@ -187,7 +174,7 @@ public class StoryService {
     @Transactional
     public List<Long> getStories(Long userId) throws BaseException {
         try {
-            List<Story> story = this.storyRepository.findByUser((User)this.userRepository.findById(userId).orElse(null));
+            List<Story> story = this.storyRepository.findByUser((Member)this.userRepository.findById(userId).orElse(null));
             Stream<Story> stream = story.stream();
             List<Long> getRes = (List)stream.map((s) -> {
                 Long storyId = s.getId();

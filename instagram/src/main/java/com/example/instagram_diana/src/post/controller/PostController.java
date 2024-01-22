@@ -1,14 +1,14 @@
 package com.example.instagram_diana.src.post.controller;
 
-import com.example.instagram_diana.config.BaseException;
-import com.example.instagram_diana.config.BaseResponse;
+import com.example.instagram_diana.src.common.exception.BaseException;
+import com.example.instagram_diana.src.common.response.BaseResponse;
 import com.example.instagram_diana.src.post.dto.*;
 import com.example.instagram_diana.src.member.service.LikeService;
 import com.example.instagram_diana.src.post.service.PostService;
 import com.example.instagram_diana.src.testS3.S3Service;
 import com.example.instagram_diana.src.member.service.UserService;
 import com.example.instagram_diana.src.utils.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,9 +16,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.example.instagram_diana.config.BaseResponseStatus.*;
+import static com.example.instagram_diana.src.common.response.BaseResponseStatus.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/app")
 public class PostController {
 
@@ -27,15 +28,6 @@ public class PostController {
     private final S3Service s3Service;
     private final JwtService jwtService;
     private final LikeService likeService;
-
-    @Autowired
-    public PostController(UserService userService, PostService postService, S3Service s3Service, JwtService jwtService, LikeService likeService) {
-        this.userService = userService;
-        this.postService = postService;
-        this.s3Service = s3Service;
-        this.jwtService = jwtService;
-        this.likeService = likeService;
-    }
 
     // 랜덤 피드 개별 게시물 조회
     @GetMapping("/posts/popular/{postId}")

@@ -1,7 +1,7 @@
 package com.example.instagram_diana.config.auth;
 
 
-import com.example.instagram_diana.src.member.model.User;
+import com.example.instagram_diana.src.member.model.Member;
 import com.example.instagram_diana.src.member.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +26,7 @@ public class PrincipalDetailsService implements UserDetailsService {
 
         System.out.println("로드바이유저네임!"+loginInput);
 
-        User user = new User();
+        Member user = new Member();
             // 1. 이메일존재시 이메일로 DB에서 유저 찾아오기
             if(userRepository.existsByEmail(loginInput)){
                 user = userRepository.findByEmail(loginInput);

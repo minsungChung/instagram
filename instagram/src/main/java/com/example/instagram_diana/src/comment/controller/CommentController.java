@@ -1,36 +1,32 @@
 package com.example.instagram_diana.src.comment.controller;
 
-import com.example.instagram_diana.config.BaseException;
-import com.example.instagram_diana.config.BaseResponse;
+import com.example.instagram_diana.src.common.exception.BaseException;
+import com.example.instagram_diana.src.common.response.BaseResponse;
 import com.example.instagram_diana.src.comment.dto.GetCommentRes;
 import com.example.instagram_diana.src.comment.dto.PostCommentLikeRes;
 import com.example.instagram_diana.src.comment.dto.PostCommentReq;
 import com.example.instagram_diana.src.comment.dto.PostCommentRes;
 import com.example.instagram_diana.src.comment.service.CommentService;
 import com.example.instagram_diana.src.utils.JwtService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping({"/app"})
 public class CommentController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    private final CommentService commentService;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Autowired
-    private final JwtService jwtService;
 
-    public CommentController(CommentService commentService, JwtService jwtService) {
-        this.commentService = commentService;
-        this.jwtService = jwtService;
-    }
+    private final CommentService commentService;
+
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private final JwtService jwtService;
 
     @PostMapping({"/posts/{postId}/comment"})
     public BaseResponse<PostCommentRes> uploadComment(@PathVariable Long postId, @RequestBody PostCommentReq postCommentReq) throws BaseException {

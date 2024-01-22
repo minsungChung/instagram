@@ -1,4 +1,4 @@
-package com.example.instagram_diana.config;
+package com.example.instagram_diana.src.common.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static com.example.instagram_diana.config.BaseResponseStatus.SUCCESS;
+import static com.example.instagram_diana.src.common.response.BaseResponseStatus.SUCCESS;
 
 @Getter
 @AllArgsConstructor

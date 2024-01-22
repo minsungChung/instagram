@@ -2,7 +2,7 @@ package com.example.instagram_diana.config.oauth;
 
 import com.example.instagram_diana.config.auth.PrincipalDetails;
 import com.example.instagram_diana.config.secret.Secret;
-import com.example.instagram_diana.src.member.model.User;
+import com.example.instagram_diana.src.member.model.Member;
 import com.example.instagram_diana.src.member.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -73,9 +73,9 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService  {
 
         // 회원가입 (DB저장)
 
-        User userEntity = userRepository.findByUsername(username);
+        Member userEntity = userRepository.findByUsername(username);
         if(userEntity == null){        // 이미 회원가입이 되어있을때 에러
-            userEntity = User.builder()
+            userEntity = Member.builder()
                     .username(username)
                     .name(null)
                     .email(email)

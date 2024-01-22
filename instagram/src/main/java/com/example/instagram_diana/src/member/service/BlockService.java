@@ -1,16 +1,14 @@
 package com.example.instagram_diana.src.member.service;
 
 import com.example.instagram_diana.src.member.repository.BlockRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class BlockService {
     private final BlockRepository blockRepository;
-
-    public BlockService(BlockRepository blockRepository) {
-        this.blockRepository = blockRepository;
-    }
 
     @Transactional
     public int checkBlock(Long fromUserId, Long toUserId) {
