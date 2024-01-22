@@ -1,10 +1,10 @@
 package com.example.instagram_diana.src.post.service;
 
 
-import com.example.instagram_diana.config.BaseException;
+import com.example.instagram_diana.src.common.exception.BaseException;
+import com.example.instagram_diana.src.member.model.Member;
 import com.example.instagram_diana.src.post.model.Post;
 import com.example.instagram_diana.src.post.model.PostMedia;
-import com.example.instagram_diana.src.member.model.User;
 import com.example.instagram_diana.src.post.dto.*;
 import com.example.instagram_diana.src.post.repository.DayDao;
 import com.example.instagram_diana.src.post.repository.PostMediaRepository;
@@ -15,10 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.instagram_diana.config.BaseResponseStatus.POST_CANNOT_DELETE;
+import static com.example.instagram_diana.src.common.response.BaseResponseStatus.POST_CANNOT_DELETE;
 
 @RequiredArgsConstructor
 @Service
@@ -36,14 +35,12 @@ public class PostService {
     public void postUpload(PostUploadDto postUploadDto, Long loginId) {
 
         // post DB저장
-        Post post = new Post();
-        User user = userService.findUserById(loginId);
+        Member user = userService.findUserById(loginId);
 
-        post.setUser(user);
-        post.setContent(postUploadDto.getContent());
-        post.setStatus("ACTIVE");
-        post.setCreatedAt(LocalDateTime.now());
-        post.setUpdatedAt(LocalDateTime.now());
+        Post post = Post.builder()
+                .user(user)
+                .content(postUploadDto.getContent())
+                .build();
 
         postRepository.save(post);
 
@@ -51,14 +48,11 @@ public class PostService {
 
         // postMedia 모두 별도 DB저장
         for(int i=0;i<postUploadDto.getImgUrlList().size();i++){
-            PostMedia postMedia = new PostMedia();
-            postMedia.setPost(post);
-            // 미디어타입필터링(구현예정)
-            postMedia.setMediaType("PHOTO");
-            postMedia.setMediaUrl(postUploadDto.getImgUrlList().get(i));
-            postMedia.setStatus("ACTIVE");
-            postMedia.setCreatedAt(LocalDateTime.now());
-            postMedia.setUpdatedAt(LocalDateTime.now());
+            PostMedia postMedia = PostMedia.builder()
+                    .post(post)
+                    .mediaType("PHOTO")
+                    .mediaUrl(postUploadDto.getImgUrlList().get(i)).build();
+
             postMediaRepository.save(postMedia);
         }
     }
@@ -87,8 +81,7 @@ public class PostService {
 
         Post post = postRepository.findById(postId).get();
 
-        post.setContent(content);
-        postRepository.save(post);
+        post.uploadContent(content);
     }
 
     @Transactional
@@ -116,26 +109,20 @@ public class PostService {
     @Transactional
     public void feedUpload(long loginUserId, FeedUploadDto feedUploadDto) {
         // post DB저장
-        Post post = new Post();
-        User user = userService.findUserById(loginUserId);
+        Member user = userService.findUserById(loginUserId);
 
-        post.setUser(user);
-        post.setContent(feedUploadDto.getContent());
-        post.setStatus("ACTIVE");
-        post.setCreatedAt(LocalDateTime.now());
-        post.setUpdatedAt(LocalDateTime.now());
+        Post post = Post.builder()
+                .user(user)
+                .content(feedUploadDto.getContent()).build();
 
         postRepository.save(post);
 
         // postMedia 모두 별도 DB저장
-        PostMedia postMedia = new PostMedia();
-        postMedia.setPost(post);
-        // 미디어타입필터링(구현예정)
-        postMedia.setMediaType("PHOTO");
-        postMedia.setMediaUrl(feedUploadDto.getImgUrl());
-        postMedia.setStatus("ACTIVE");
-        postMedia.setCreatedAt(LocalDateTime.now());
-        postMedia.setUpdatedAt(LocalDateTime.now());
+        PostMedia postMedia = PostMedia.builder()
+                .post(post)
+                .mediaType("PHOTO")
+                .mediaUrl(feedUploadDto.getImgUrl()).build();
+
         postMediaRepository.save(postMedia);
     }
 

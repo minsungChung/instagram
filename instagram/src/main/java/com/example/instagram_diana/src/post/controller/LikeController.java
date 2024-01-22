@@ -1,19 +1,20 @@
 package com.example.instagram_diana.src.post.controller;
 
-import com.example.instagram_diana.config.BaseException;
-import com.example.instagram_diana.config.BaseResponse;
+import com.example.instagram_diana.src.common.exception.BaseException;
+import com.example.instagram_diana.src.common.response.BaseResponse;
 import com.example.instagram_diana.src.member.service.LikeService;
 import com.example.instagram_diana.src.post.service.PostService;
 import com.example.instagram_diana.src.utils.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.example.instagram_diana.config.BaseResponseStatus.POST_ID_NOT_EXISTS;
+import static com.example.instagram_diana.src.common.response.BaseResponseStatus.POST_ID_NOT_EXISTS;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/app/users")
 public class LikeController
 {
@@ -21,13 +22,6 @@ public class LikeController
     private final JwtService jwtService;
 
     private final PostService postService;
-
-    @Autowired
-    public LikeController(LikeService likeService, JwtService jwtService, PostService postService) {
-        this.likeService = likeService;
-        this.postService = postService;
-        this.jwtService = jwtService;
-    }
 
     @GetMapping("/like-states/{postId}")
     public BaseResponse<?> likeState(@PathVariable("postId") long postId){

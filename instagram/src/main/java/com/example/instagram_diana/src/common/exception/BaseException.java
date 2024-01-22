@@ -1,5 +1,6 @@
-package com.example.instagram_diana.config;
+package com.example.instagram_diana.src.common.exception;
 
+import com.example.instagram_diana.src.common.response.BaseResponseStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

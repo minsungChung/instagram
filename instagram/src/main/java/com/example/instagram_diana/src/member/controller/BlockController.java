@@ -1,15 +1,17 @@
 package com.example.instagram_diana.src.member.controller;
 
-import com.example.instagram_diana.config.BaseException;
-import com.example.instagram_diana.config.BaseResponse;
+import com.example.instagram_diana.src.common.exception.BaseException;
+import com.example.instagram_diana.src.common.response.BaseResponse;
 import com.example.instagram_diana.src.member.service.BlockService;
 import com.example.instagram_diana.src.member.service.UserService;
 import com.example.instagram_diana.src.utils.JwtService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static com.example.instagram_diana.config.BaseResponseStatus.*;
+import static com.example.instagram_diana.src.common.response.BaseResponseStatus.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/app/users")
 public class BlockController {
 
@@ -18,11 +20,6 @@ public class BlockController {
 
     private final JwtService jwtService;
 
-    public BlockController(UserService userService, BlockService blockService, JwtService jwtService) {
-        this.userService = userService;
-        this.blockService = blockService;
-        this.jwtService = jwtService;
-    }
 
     @PostMapping("/blocks/{toUserId}")
     public BaseResponse<?> block(@PathVariable("toUserId") long toUserId){

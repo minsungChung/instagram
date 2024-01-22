@@ -1,24 +1,22 @@
 package com.example.instagram_diana.src.member.service;
 
-import com.example.instagram_diana.config.BaseException;
+import com.example.instagram_diana.src.common.exception.BaseException;
 import com.example.instagram_diana.src.member.dto.*;
+import com.example.instagram_diana.src.member.model.Member;
 import com.example.instagram_diana.src.member.repository.UserRepository;
 import com.example.instagram_diana.src.post.dto.DayDto;
 import com.example.instagram_diana.src.post.model.Post;
 import com.example.instagram_diana.src.post.model.PostMedia;
 import com.example.instagram_diana.src.post.repository.DayDao;
 import com.example.instagram_diana.src.member.repository.FollowRepository;
-import com.example.instagram_diana.src.member.model.User;
 import com.example.instagram_diana.src.post.repository.PostMediaRepository;
 import com.example.instagram_diana.src.post.repository.PostRepository;
 import com.example.instagram_diana.src.post.service.PostMediaService;
-import com.example.instagram_diana.src.testS3.S3Service;
 import com.example.instagram_diana.src.utils.JwtService;
 import com.example.instagram_diana.src.utils.SHA256;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.instagram_diana.config.BaseResponseStatus.*;
+import static com.example.instagram_diana.src.common.response.BaseResponseStatus.*;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -37,34 +36,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
 
-    //private final PostService postService;
-
     private final PostRepository postRepository;
-
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final PostMediaRepository postMediaRepository;
     private final PostMediaService postMediaService;
 
     private final LikeService likeService;
 
-    private final S3Service s3Service;
-
     private final DayDao dayDao;
-
-    @Autowired
-    public UserService(JwtService jwtService, UserRepository userRepository, FollowRepository followRepository, PostRepository postRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
-                       PostMediaRepository postMediaRepository, PostMediaService postMediaService, LikeService likeService, S3Service s3Service, DayDao dayDao) {
-        this.jwtService = jwtService;
-        this.userRepository = userRepository;
-        this.followRepository = followRepository;
-        this.postRepository = postRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.postMediaRepository = postMediaRepository;
-        this.postMediaService = postMediaService;
-        this.likeService = likeService;
-        this.s3Service = s3Service;
-        this.dayDao = dayDao;
-    }
 
     public boolean checkUserExist(long userId){
 
@@ -84,8 +62,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User findUserById(long userIdx){
-        User user = userRepository.findById(userIdx).get();
+    public Member findUserById(long userIdx){
+        Member user = userRepository.findById(userIdx).get();
         return user;
     }
 
@@ -103,7 +81,7 @@ public class UserService {
             throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
         }
         try{
-            User user = User.builder()
+            Member user = Member.builder()
                     .username(postUserReq.getUserName())
                     .name(postUserReq.getName())
                     .email(postUserReq.getEmail())
@@ -115,7 +93,7 @@ public class UserService {
 
             // 회원가입 (DB저장)
 
-            User resUser = userRepository.save(user);
+            Member resUser = userRepository.save(user);
             Long userIdx = resUser.getId();
 
             //jwt 발급.
@@ -134,7 +112,7 @@ public class UserService {
             // 아이디: 전화번호/사용자이름/이메일 => 비밀번호 찾기 로직
             String loginInput = postLoginReq.getLoginInput();
 
-            User user = new User();
+            Member user = new Member();
             try {
                 // 1. 이메일존재시 이메일로 DB에서 유저 찾아오기
                 if (userRepository.existsByEmail(loginInput)) {
@@ -188,18 +166,14 @@ public class UserService {
     @Transactional
     public void modifyUserInfo(Long userIdx, PatchUserReq patchUserReq) throws BaseException {
 
-        Optional<User> updateUser = userRepository.findById(userIdx);
+        Optional<Member> updateUser = userRepository.findById(userIdx);
 
         updateUser.ifPresent(user->{
-            System.out.println("hi");
-            if(patchUserReq.getName()!=null){user.setName(patchUserReq.getName());}
-            if(patchUserReq.getUserName()!=null){user.setUsername(patchUserReq.getUserName());}
-            if(patchUserReq.getBio()!=null){user.setBio(patchUserReq.getBio());}
-            if(patchUserReq.getLink()!=null){user.setSite(patchUserReq.getLink());}
-            if(patchUserReq.getProfileUrl()!=null){user.setProfileUrl(patchUserReq.getProfileUrl());}
-
-            userRepository.save(user);
-
+            user.updateName(patchUserReq.getName());
+            user.updateUsername(patchUserReq.getProfileUrl());
+            user.updateBio(patchUserReq.getBio());
+            user.updateSite(patchUserReq.getLink());
+            user.updateProfileUrl(patchUserReq.getProfileUrl());
         });
     }
 
@@ -209,7 +183,7 @@ public class UserService {
         UserProfileDto dto = new UserProfileDto();
 
 
-        Optional<User> pageUser = userRepository.findById(pageUserId);
+        Optional<Member> pageUser = userRepository.findById(pageUserId);
         pageUser.ifPresent(user->{
 
             UserProfileUserDto PageUserInfo = UserProfileUserDto
@@ -223,7 +197,7 @@ public class UserService {
 
             dto.setProfileUserDto(PageUserInfo);
             dto.setPageOwnerState(pageUserId==loginUserId);
-            dto.setPostCount(user.getPosts().size());
+            dto.setPostCount(1);
 
             int followState = followRepository.followState(loginUserId,pageUserId);
             int followingCount = followRepository.followingCount(pageUserId);
@@ -290,7 +264,7 @@ public class UserService {
 
     @Transactional
     public String profileUpload(long loginUserId, String profileImgUrl) throws IOException {
-        User user = findUserById(loginUserId);
+        Member user = findUserById(loginUserId);
 
 //        ProfileImageUploadDto dto = new ProfileImageUploadDto();
 //
@@ -301,7 +275,7 @@ public class UserService {
 //        // 프로필정보 업데이트
 //        user.setProfileUrl(profileImgUrl);
 
-        user.setProfileUrl(profileImgUrl);
+        user.updateProfileUrl(profileImgUrl);
 
         // table에 저장
         userRepository.save(user);
@@ -311,16 +285,14 @@ public class UserService {
 
     @Transactional
     public void modifyUserEmail(long userId, String email) {
-        User user = userRepository.findById(userId).get();
+        Member user = userRepository.findById(userId).get();
 
-        user.setEmail(email);
-        userRepository.save(user);
+        user.updateEmail(email);
     }
 
     public void modifyUserPhone(long userId, String phone) {
-        User user = userRepository.findById(userId).get();
+        Member user = userRepository.findById(userId).get();
 
-        user.setPhone(phone);
-        userRepository.save(user);
+        user.updatePhone(phone);
     }
 }

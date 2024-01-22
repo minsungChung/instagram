@@ -1,17 +1,18 @@
 package com.example.instagram_diana.src.member.controller;
 
-import com.example.instagram_diana.config.BaseException;
-import com.example.instagram_diana.config.BaseResponse;
+import com.example.instagram_diana.src.common.exception.BaseException;
+import com.example.instagram_diana.src.common.response.BaseResponse;
 import com.example.instagram_diana.src.member.dto.FollowDto;
 import com.example.instagram_diana.src.member.service.FollowService;
 import com.example.instagram_diana.src.member.service.UserService;
 import com.example.instagram_diana.src.utils.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static com.example.instagram_diana.config.BaseResponseStatus.*;
+import static com.example.instagram_diana.src.common.response.BaseResponseStatus.*;
 
 @RequestMapping("/app")
+@RequiredArgsConstructor
 @RestController
 public class FollowController {
 
@@ -20,13 +21,6 @@ public class FollowController {
     private final UserService userService;
 
     private final JwtService jwtService;
-
-    @Autowired
-    public FollowController(FollowService followService, UserService userService, JwtService jwtService) {
-        this.followService = followService;
-        this.userService = userService;
-        this.jwtService = jwtService;
-    }
 
     @PostMapping("/follows/users/{toUserId}")
     public BaseResponse<?> PostFollow(@PathVariable("toUserId") long toUserId) throws BaseException{

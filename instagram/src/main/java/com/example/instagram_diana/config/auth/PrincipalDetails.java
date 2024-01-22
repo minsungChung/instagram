@@ -10,7 +10,7 @@ package com.example.instagram_diana.config.auth;
 
 // Security Session영역 => Authentication 객체 => UserDetails 타입객체 (implements UserDetails)
 
-import com.example.instagram_diana.src.member.model.User;
+import com.example.instagram_diana.src.member.model.Member;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,18 +22,18 @@ import java.util.Map;
 @Data
 public class PrincipalDetails implements UserDetails, OAuth2User {
 
-    private User user;
+    private Member user;
     private Map<String,Object> attributes;
 
     // 생성자
 
     // 일반 로그인
-    public PrincipalDetails(User user) {
+    public PrincipalDetails(Member user) {
         this.user = user;
     }
 
     // OAut 로그인
-    public PrincipalDetails(User user, Map<String,Object> attributes) {
+    public PrincipalDetails(Member user, Map<String,Object> attributes) {
 
         this.user = user;
         this.attributes = attributes;
